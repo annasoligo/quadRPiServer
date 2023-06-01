@@ -1,0 +1,235 @@
+/* Global styles */
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #212121;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Header styles */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /*background-color: #f2f2f2; */
+  color: #ffffff;
+  padding: 0px 7px ;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: xx-large;
+  margin-right: 2%;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+
+}
+
+
+nav li {
+    color: #ffffff; /* changed text color */
+    text-decoration: none;
+    margin-left: 20px;
+}
+  
+.filler{
+    flex-grow: 1;
+}
+  
+  /* Main content styles */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 40px;
+    color: #ffffff; /* changed text color */
+}
+  
+.image-boxes {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+  
+.image-box-L {
+    width: 100%;
+    min-height: 280px;
+    height: 40vh;
+    overflow: hidden;
+    border-radius: 10px;
+}
+  
+.image-box {
+    width: 48%;
+    height: 280px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+    
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.status-sections {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.status-sections ul {
+  padding: 0;
+}
+
+.charge-status, .delivery-status {
+  width: 48%;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.status-sections h2 {
+  margin-bottom: 10px;
+  color: #ffffff; /* changed text color */
+  font-size: x-large;
+}
+
+.status-sections ul {
+  list-style: none;
+}
+
+.status-sections ul li {
+  margin-bottom: 10px;
+  color: #ffffff; /* changed text color */
+}
+
+.status-symbol {
+    margin-right: 10px;
+}
+  
+  
+  
+  /* toggle styling*/
+  
+.toggle-switch-container {
+    align-content: left;
+    padding: 10px;
+}
+  
+.toggle-switch {
+    margin: 0;
+}
+  
+.toggle-switch {
+    width: 10px;
+    position: relative;
+}
+  
+.toggle-switch input {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+  
+.toggle-switch input:checked {
+    z-index: 1;
+}
+  
+.toggle-switch input:checked + label {
+    opacity: 1;
+    cursor: default;
+}
+
+  
+.toggle-switch input:not(:checked) + label:hover {
+    opacity: 0.5;
+}
+  
+.toggle-switch label {
+    color: #fff;
+    opacity: 0.33;
+    cursor: pointer;
+    transition: opacity 0.3s ease-in-out;
+}
+  
+.toggle-switch .toggle-outside {
+    height: 100%;
+    border-radius: 17px;
+    padding: 11px;
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out;
+}
+  
+.toggle-switch .toggle-inside {
+    border-radius: 50%;
+    background: #424242;
+    position: absolute;
+    transition: all 0.3s ease-in-out;
+}
+  
+.switch-vertical {
+    background-color: #00F;
+    width: 0px;
+    height: 60px;
+    margin-left: 27px;
+}
+
+.switch-vertical input {
+    height: 100%;
+    width: 60px;
+    right: 0;
+    margin: 0;
+}
+  
+.switch-vertical label {
+    font-size: 15px;
+    line-height: 30px;
+    display: block;
+    width: 20ch;
+    height: 50%;
+    margin: 0;
+    text-align: left;
+    padding-left: 12px;
+}
+  
+.switch-vertical .toggle-outside {
+    background: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    width: 23px;
+    height: 100%;
+    right: 0;
+    top: 0;
+}
+  
+.switch-vertical .toggle-inside {
+    height: 17px;
+    left: 3px;
+    top: 3px;
+    width: 17px;
+}
+
+.switch-vertical input:checked ~ .toggle-outside .toggle-inside {
+    top: 3px;
+}
+  
+.switch-vertical input ~ input:checked ~ .toggle-outside .toggle-inside {
+    top: 40px;
+}
+  
+  
+  
+  
+
+  

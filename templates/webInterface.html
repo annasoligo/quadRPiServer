@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AmpAir</title>
+    <link rel="stylesheet" href="../static/wIntStyle.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+  </head>
+  <body>
+    <main>
+        <header>
+            <h1>RP Interface</h1>
+            <nav>
+              <ul>
+                <li id ="rCount">Refresh Count</li>
+                <li id ="armed"> NO VEHICLE CONNECTION </li>
+                <li id = "fMode"> Flight Mode </li>
+                <li id = "battery"> Battery level </li>
+              </ul>
+              <ul>
+                <div class="filler"></div>
+                <li id= "GPS"> GPS Lock </li>
+                <li id= "altitude"> 0m </li>
+                <li id= "velocity"> 0m/s </li>
+              </ul>
+            </nav>
+          </header>
+      <div class="image-boxes">
+        <div class="image-box-L">
+          <div id='map' style='width: 100%; height: 100%;'></div>
+        </div>
+        <div class="image-box">
+          <img alt=" ">
+        </div>
+      </div>
+      <div class="status-sections">
+        <div class="charge-status">
+          <!-- <h2>Charge status</h2> -->
+          <ul>
+            <div class="toggle-switch-container">
+                <div class="toggle-switch switch-vertical" id="ledToggle">
+                  <input id="ledtoggle-up" type="radio" name="switch" checked="checked"/>
+                  <label for="ledtoggle-up">LEDs Off</label>
+                  <input id="ledtoggle-down" type="radio" name="switch"/>
+                  <label for="ledtoggle-down">LEDs On</label>
+                  <span class="toggle-outside">
+                    <span class="toggle-inside"></span>
+                  </span>
+                </div><br>
+            </div>
+
+            <li id ="chargeTF">
+                <span> WPT: &emsp; </span>
+                <span id="chargeV"> 0V </span>
+                <span id="chargeA"> 0A </span>
+                <span id="chargeP"> 0W </span>
+
+            </li>
+
+          </ul>
+        </div>
+        <div class="delivery-status">
+          <!--<h2>Delivery status</h2>-->
+          <ul>
+            <div class="toggle-switch-container">
+                <div class="toggle-switch switch-vertical" id="servoToggle">
+                  <input id="toggle-up" type="radio" name="switch2" checked="checked"/>
+                  <label for="toggle-up">Raise Magnets</label>
+                  <input id="toggle-down" type="radio" name="switch2"/>
+                  <label for="toggle-down">Lower Magnets</label>
+                  <span class="toggle-outside">
+                    <span class="toggle-inside"></span>
+                </span>
+                </div>
+            </div> <br>
+            <li id="PLstat"></li>
+          </ul>
+        </div>
+      </div>
+    </main>
+
+    <script>
+
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYWpzMTYxOCIsImEiOiJjbGZwcDd6YnYwYnFqM3hubHJlbTlyZGZ6In0.JDxIH0J6gMlGeVIwPZ82cA';
+
+        var map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/dark-v11',
+          center: [-0.204034, 51.479114],
+          zoom:17
+        });
+        const marker = new mapboxgl.Marker()
+          .setLngLat([-0.204034, 51.479114])
+          .addTo(map);
+
+        red = '#ff3b30'
+        green = '#4cd964'
+        lBlue = '#5ac8fa'
+        dBlue = '#007aff'
+        orange = '#ff9500'
+        yellow = '#ffcc00'
+
+        function update(){
+            $.get("/update", function(data){
+
+                console.log(data);
+
+                document.getElementById("rCount").innerHTML = data.refreshCount;
+                document.getElementById("fMode").innerHTML = 'Flight Mode: ' + data.mode;
+                document.getElementById("battery").innerHTML = 'Battery: ' +  data.battery + 'V';
+                velocity = Math.sqrt(data.velocity.reduce((accum, val)=> {return accum+val**2;},0));
+                document.getElementById("velocity").innerHTML = velocity.toFixed(1) + 'm/s';
+                document.getElementById("altitude").innerHTML = data.location[2] + 'm';
+
+                if (data.battery[0] >23) {document.getElementById("battery").style.color = green;}
+                else if (data.battery[0] >22) {document.getElementById("battery").style.color = yellow;}
+                else if (data.battery[0] >21.5) {document.getElementById("battery".style.color = orange;}
+                else {document.getElementById("battery").style.color = red;}
+
+                if (!data.location[0]) {
+                  document.getElementById("GPS").style.color = red;
+                  document.getElementById("GPS").innerHTML = "No GPS Signal";
+                }
+                else {
+                  document.getElementById("GPS").style.color = green;
+                  document.getElementById("GPS").innerHTML = "GPS Locked";
+                }
+
+                document.getElementById("chargeV").innerHTML = data.charge[0] + 'V &emsp;';
+                document.getElementById("chargeA").innerHTML = data.charge[1] + 'A &emsp;';
+                document.getElementById("chargeP").innerHTML = data.charge[2] + 'W &emsp;';
+
+
+                if (data.charge[2]>2) {
+                  document.getElementById("chargeTF").style.color = green;
+                }
+
+                else {
+                  document.getElementById("chargeTF").style.color = 'white';
+                }
+
+                if (data.armed == true) {
+                  document.getElementById("armed").style.color = orange;
+                  document.getElementById("armed").innerHTML = "Vehicle Armed";
+                }
+                else if (data.armed == false) {
+                  document.getElementById("armed").style.color = lBlue;
+                  document.getElementById("armed").innerHTML = "Vehicle Disarmed";}
+
+                else {
+                  document.getElementById("armed").style.color = "white";
+                  document.getElementById("armed").innerHTML = "NO AIRCRAFT CONNECTION";}
+                updateLocation(data.location[0],data.location[1]);
+            });
+        }
+
+        update()
+
+        var intervalId = setInterval(function() {
+            update()
+        }, 1000);
+
+        function updateLocation(lat, lon) {
+            marker.setLngLat([lon,lat]);
+            map.easeTo({
+            center: [lon,lat]
+            });
+            return false;
+          }
+
+        const servoTU = document.getElementById('toggle-up');
+        servoTU.addEventListener('change', function(event)
+        {
+            var tar = 'toggle-up';
+            console.log(tar);
+            $.getJSON('/'+tar,
+            function(data) {
+                  //do nothing
+            });
+            return false;
+        });
+
+        const LEDTU = document.getElementById('ledtoggle-up');
+        LEDTU.addEventListener('change', function(event)
+        {
+            var tar = 'LED-toggle-up';
+            console.log(tar);
+            $.getJSON('/'+tar,
+            function(data) {
+                  //do nothing
+                });
+            return false;
+
+        });
+
+        const servoTD = document.getElementById('toggle-down');
+        servoTD.addEventListener('change', function(event)
+        {
+            var tar = 'toggle-down';
+            console.log(tar);
+            $.getJSON('/'+tar,
+            function(data) {
+                  //do nothing
+            });
+            return false;
+        });
+
+        const LEDTD = document.getElementById('ledtoggle-down');
+        LEDTD.addEventListener('change', function(event)
+        {
+            var tar = 'LED-toggle-down';
+            console.log(tar);
+            $.getJSON('/'+tar,
+            function(data) {
+                  //do nothing
+            });
+            return false;
+        });
+
+    </script>
+
+
+  </body>
+</html>

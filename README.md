@@ -9,7 +9,7 @@ This code runs on a Raspberry Pi to host a web-page on a flask server. The Raspb
 
 These options can be customised through changes to the server-code (RPwebUI.py) for fetching data using Mavlink messages (https://dronekit-python.readthedocs.io/en/latest/guide/mavlink_messages.html) and the html and css files for the interface dislay.
 
-![A screenshot of the server UI](relative%20path/images/RPinterface.jpg)
+![A screenshot of the server UI](images/RPinterface.jpg)
 
 ## Set-Up
 
